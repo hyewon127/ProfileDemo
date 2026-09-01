@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차혜원 | Developer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. 디자인 시스템 & 리셋 (Navy 팔레트) --- */
+        :root {
+            --primary-color: #22345c;   /* 코어 남색 - 버튼/링크/포인트 */
+            --primary-dark: #172542;    /* 호버 시 더 짙은 남색 */
+            --primary-tint: #e7eaf3;    /* 태그 배경용 옅은 남색 */
+            --ink: #1c2233;             /* 본문 텍스트 (남색 기가 도는 다크그레이) */
+            --ink-light: #5b6479;       /* 보조 텍스트 */
+            --bg-light: #f6f7fb;        /* 페이지 배경 */
+            --card-bg: #ffffff;
+            --border-color: #dde1ee;
+            --footer-bg: #0f1830;       /* 짙은 남색 푸터 */
+            --footer-text: #97a0c2;
+            --status-live: #22345c;
+            --status-planned: #b9bfd4;
+            --max-width: 1100px;
+            --font-display: 'Noto Sans KR', 'Malgun Gothic', 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+            color-scheme: light;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            html {
+                scroll-behavior: smooth;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        body {
+            font-family: var(--font-display);
+            line-height: 1.7;
+            color: var(--ink);
+            background-color: var(--bg-light);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        ::selection {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 3px;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- 2. 헤더 & 네비게이션 --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-menu a {
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* --- 3. 섹션 공통 스타일 --- */
+        section {
+            padding: 100px 0 60px 0;
+        }
+
+        .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--ink-light);
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 40px;
+            text-align: center;
+            text-wrap: balance;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background-color: var(--primary-color);
+            margin: 14px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        /* --- 4. 프로필 (Intro) 섹션 --- */
+        #about {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 80vh;
+            gap: 40px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            line-height: 1.25;
+            text-wrap: balance;
+        }
+
+        .about-text .job-title {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .about-text p.desc {
+            font-size: 1.02rem;
+            max-width: 62ch;
+            color: var(--ink-light);
+            margin-bottom: 22px;
+        }
+
+        .identity-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .about-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 360px;
+            height: 360px;
+            max-width: 90vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-tint) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .profile-img {
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 8px solid var(--card-bg);
+            box-shadow: 0 20px 40px rgba(23, 37, 66, 0.15);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* 데모영상 / 발표자료 같은 보조 버튼 (GitHub 버튼과 구분되는 아웃라인 스타일) */
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1.5px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-tint);
+            color: var(--primary-color);
+        }
+
+        /* --- 5. 기술 스택 (Skills) 섹션 --- */
+        #skills {
+            background-color: var(--card-bg);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .skill-card {
+            background-color: var(--bg-light);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(23, 37, 66, 0.08);
+        }
+
+        .skill-card h3 {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .skill-card ul li {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .skill-card ul li .lv {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--ink-light);
+            flex-shrink: 0;
+        }
+
+        /* --- 6. 포트폴리오 섹션 (카드 레이아웃) --- */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .portfolio-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(23, 37, 66, 0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 24px rgba(23, 37, 66, 0.12);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: var(--primary-tint);
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-family: var(--font-mono);
+            background-color: var(--primary-tint);
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .tag.status-live {
+            background-color: var(--status-live);
+            color: #fff;
+        }
+
+        .tag.status-planned {
+            background-color: var(--bg-light);
+            color: var(--ink-light);
+            border: 1px dashed var(--status-planned);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-desc {
+            color: var(--ink-light);
+            font-size: 0.95rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* --- 7. 모달 팝업 (상세보기) --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 24, 48, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            width: 90%;
+            max-width: 700px;
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--ink-light);
+        }
+
+        .close-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            background-color: var(--primary-tint);
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .modal-block {
+            margin-bottom: 18px;
+        }
+
+        .modal-block:last-of-type {
+            margin-bottom: 25px;
+        }
+
+        .modal-block h4 {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+        }
+
+        .modal-block p {
+            color: var(--ink-light);
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* --- 8. 푸터 --- */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        /* --- 9. 반응형 미디어 쿼리 --- */
+        @media (max-width: 768px) {
+            #about {
+                flex-direction: column-reverse;
+                text-align: center;
+                padding-top: 120px;
+                min-height: auto;
+            }
+            .about-text p.desc { margin-left: auto; margin-right: auto; }
+            .identity-tags { justify-content: center; }
+            .about-text h1 { font-size: 2.2rem; }
+            .profile-img { width: 220px; height: 220px; }
+            .about-image::before { width: 260px; height: 260px; }
+            .nav-menu { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo">차혜원</a>
+            <nav class="nav-menu">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#portfolio">Portfolio</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="about">
+            <div class="about-text">
+                <p class="job-title">// Software Developer</p>
+                <h1>안녕하세요,<br>차혜원입니다.</h1>
+                <p class="desc">2026년 3월부터 한국폴리텍대학 하이테크과정 스마트금융과에 재학하며 개발자로서의 첫걸음을 내딛고 있습니다. 새로운 개념을 마주하면 원리부터 꼼꼼히 파고드는 편이고, 막히는 문제도 끝까지 붙잡고 해결해내는 끈기를 강점으로 생각합니다. 사내 그룹웨어 포털, 학생 성적관리 시스템 같은 실무형 프로젝트를 진행하며 백엔드와 데이터 처리 역량을 넓혀가는 중입니다.</p>
+                <div class="identity-tags">
+                    <span class="tag">성장지향</span>
+                    <span class="tag">꼼꼼함</span>
+                    <span class="tag">논리적사고</span>
+                    <span class="tag">협업중시</span>
+                    <span class="tag">빠른학습력</span>
+                    <span class="tag">책임감</span>
+                    <span class="tag">끈기</span>
+                    <span class="tag">새로운도전</span>
+                </div>
+                <a href="https://github.com/hyewon127" target="_blank" class="btn">GitHub 방문하기</a>
+            </div>
+            <div class="about-image">
+                <img src="data:image/jpeg;base64,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" alt="차혜원 증명사진" class="profile-img">
+            </div>
+        </section>
+    </div>
+
+    <section id="skills">
+        <div class="container">
+            <p class="eyebrow">// tech stack</p>
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Language &amp; Framework</h3>
+                    <ul>
+                        <li>Java <span class="lv">중급</span></li>
+                        <li>전자정부프레임워크 <span class="lv">중급</span></li>
+                        <li>Python <span class="lv">초급</span></li>
+                        <li>JavaScript <span class="lv">초급</span></li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>Infra &amp; DevOps</h3>
+                    <ul>
+                        <li>Linux · WSL <span class="lv">중급</span></li>
+                        <li>Docker <span class="lv">초급</span></li>
+                        <li>Kubernetes <span class="lv">초급</span></li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>Data &amp; AI</h3>
+                    <ul>
+                        <li>Kafka <span class="lv">초급</span></li>
+                        <li>AI RAG Chatbot <span class="lv">초급</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio">
+        <div class="container">
+            <p class="eyebrow">// selected work</p>
+            <h2 class="section-title">Portfolio</h2>
+
+            <!-- ============================================================
+                 [사진 첨부 안내]
+                 카드 썸네일 = 아래 각 <img class="card-img" src="..."> 의 src.
+                 모달(클릭 시 크게 보이는 상세) 이미지 = 맨 아래 <script>의 projectData 안 img 값.
+                 실제 스크린샷으로 바꾸려면: 이 파일과 같은 폴더에 images 폴더를 만들고
+                 사진을 넣은 뒤 src="images/파일명.png" 형태로 경로만 바꾸면 됩니다.
+                 (지금 들어있는 placehold.co 주소는 사진 없을 때 쓰는 임시 이미지입니다)
+                 ============================================================ -->
+
+            <div class="portfolio-grid" id="portfolioGrid">
+
+                <div class="portfolio-card" onclick="openModal('grades')">
+                    <!-- 카드 썸네일: 여기 src를 실제 스크린샷 경로로 교체 -->
+                    <img src="https://placehold.co/400x250/22345c/ffffff?text=Grade+Management" alt="학생 성적관리 시스템" class="card-img">
+                    <div class="card-content">
+                        <div class="card-tags">
+                            <span class="tag status-live">진행중</span>
+                            <span class="tag">Java</span>
+                            <span class="tag">Spring</span>
+                            <span class="tag">MyBatis</span>
+                            <span class="tag">MySQL</span>
+                        </div>
+                        <h3 class="card-title">학생 성적관리 시스템</h3>
+                        <p class="card-desc">학생의 성적을 입력·조회하고 통계로 확인할 수 있는 웹 기반 성적관리 시스템입니다.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick="openModal('groupware')">
+                    <!-- 카드 썸네일: 여기 src를 실제 스크린샷 경로로 교체 -->
+                    <img src="https://placehold.co/400x250/22345c/ffffff?text=Groupware+Portal" alt="사내 그룹웨어 포털 시스템" class="card-img">
+                    <div class="card-content">
+                        <div class="card-tags">
+                            <span class="tag status-live">진행중</span>
+                            <span class="tag">eGovFrame</span>
+                            <span class="tag">Spring</span>
+                            <span class="tag">MyBatis</span>
+                            <span class="tag">Oracle</span>
+                        </div>
+                        <h3 class="card-title">사내 그룹웨어 포털 시스템</h3>
+                        <p class="card-desc">사내 구성원이 사용하는 그룹웨어 포털을 개발 중인 프로젝트입니다. eGovFrame 기반 구조 위에서 게시판, 결재, 조직도 등 업무 기능을 구현하고 있습니다.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick="openModal('k8sTodo')">
+                    <!-- 카드 썸네일: 여기 src를 실제 스크린샷 경로로 교체 -->
+                    <img src="https://placehold.co/400x250/22345c/ffffff?text=K8s+3-Tier+TODO" alt="Kubernetes 3-Tier TODO 리스트" class="card-img">
+                    <div class="card-content">
+                        <div class="card-tags">
+                            <span class="tag status-live">완료</span>
+                            <span class="tag">Kubernetes</span>
+                            <span class="tag">Spring Boot</span>
+                            <span class="tag">MySQL</span>
+                            <span class="tag">Docker</span>
+                        </div>
+                        <h3 class="card-title">Kubernetes 3-Tier TODO 리스트</h3>
+                        <p class="card-desc">Frontend(Nginx)·Backend(Spring Boot)·MySQL을 각각 Pod로 배포하고 PV/PVC·Ingress까지 구성한 3-Tier 웹 애플리케이션입니다.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick="openModal('project3')">
+                    <!-- 카드 썸네일: 여기 src를 실제 스크린샷 경로로 교체 -->
+                    <img src="https://placehold.co/400x250/dde1ee/5b6479?text=Coming+Soon" alt="프로젝트 3 (추가 예정)" class="card-img">
+                    <div class="card-content">
+                        <div class="card-tags">
+                            <span class="tag status-planned">예정</span>
+                        </div>
+                        <h3 class="card-title">프로젝트 3 (추가 예정)</h3>
+                        <p class="card-desc">새로운 프로젝트를 준비 중입니다. 진행되면 이 자리에 내용이 업데이트될 예정입니다.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick="openModal('project4')">
+                    <!-- 카드 썸네일: 여기 src를 실제 스크린샷 경로로 교체 -->
+                    <img src="https://placehold.co/400x250/dde1ee/5b6479?text=Coming+Soon" alt="프로젝트 4 (추가 예정)" class="card-img">
+                    <div class="card-content">
+                        <div class="card-tags">
+                            <span class="tag status-planned">예정</span>
+                        </div>
+                        <h3 class="card-title">프로젝트 4 (추가 예정)</h3>
+                        <p class="card-desc">새로운 프로젝트를 준비 중입니다. 진행되면 이 자리에 내용이 업데이트될 예정입니다.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="portfolioModal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <button class="close-btn" onclick="document.getElementById('portfolioModal').classList.remove('active')" aria-label="닫기">&times;</button>
+            <img src="" alt="상세 이미지" class="modal-img" id="modalImg">
+            <h2 class="modal-title" id="modalTitle">프로젝트 제목</h2>
+            <div class="modal-block">
+                <p id="modalSummary"></p>
+            </div>
+            <div class="modal-block">
+                <h4>Role</h4>
+                <p id="modalRole"></p>
+            </div>
+            <div class="modal-block">
+                <h4>Detail</h4>
+                <p id="modalDetail"></p>
+            </div>
+            <!-- 아래 버튼들은 프로젝트별로 다르게 뜨도록 JS(projectData)에서 만들어줍니다.
+                 GitHub / 데모영상 / 발표자료 버튼을 켜고 끄려면 아래 <script>의 projectData를 수정하세요. -->
+            <div class="modal-links" id="modalLinks"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 차혜원. <a href="https://github.com/hyewon127" target="_blank">github.com/hyewon127</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // =====================================================================
+        // 포트폴리오 상세 데이터 정의
+        //
+        // [사진 첨부] img 값 = 모달(상세보기)에서 크게 보이는 이미지입니다.
+        //   실제 스크린샷으로 바꾸려면 images 폴더를 만들고 img: "images/파일명.png" 로 교체하세요.
+        //
+        // [버튼 켜고 끄기] github / demo / slides 세 가지 버튼을 지원합니다.
+        //   - github: 값이 있으면 "GitHub" 버튼이 뜨고, ''(빈 문자열)이면 버튼이 안 뜹니다.
+        //   - demo, slides: 기본은 주석 처리되어 꺼진 상태입니다.
+        //     데모영상/발표자료가 생기면 아래에서 해당 줄의 "// " 를 지우고(주석 해제)
+        //     따옴표 안을 실제 링크(유튜브 URL, 구글드라이브 공유링크 등)로 바꾸면 버튼이 나타납니다.
+        //     다시 숨기고 싶으면 줄 맨 앞에 "// "를 붙여 주석 처리하면 됩니다.
+        // =====================================================================
+        const projectData = {
+            grades: {
+                title: "학생 성적관리 시스템",
+                img: "https://placehold.co/700x350/22345c/ffffff?text=Grade+Management", // ← 모달 상세 이미지, 실제 사진 경로로 교체
+                summary: "학생의 성적을 입력·조회하고 통계로 확인할 수 있는 웹 기반 성적관리 시스템입니다.",
+                role: "요구사항 분석부터 테이블 설계, 화면 구현, CRUD 및 통계 기능 개발까지 전 과정을 담당했습니다.",
+                detail: "학생/과목별 성적을 등록하고 평균·순위 등을 자동으로 집계하는 기능을 구현하며 데이터 처리와 화면 로직을 함께 설계하는 경험을 쌓았습니다.",
+                github: "https://github.com/hyewon127", // 이 프로젝트만의 레포 주소가 있으면 여기에 넣으세요
+                // demo: "여기에_데모영상_링크",
+                // slides: "여기에_발표자료_링크",
+            },
+            groupware: {
+                title: "사내 그룹웨어 포털 시스템",
+                img: "https://placehold.co/700x350/22345c/ffffff?text=Groupware+Portal", // ← 모달 상세 이미지, 실제 사진 경로로 교체
+                summary: "사내 구성원이 사용하는 그룹웨어 포털을 개발 중인 프로젝트입니다. eGovFrame 기반 구조 위에서 게시판, 결재, 조직도 등 업무 기능을 구현하고 있습니다.",
+                role: "화면(JSP)과 서비스 로직 구현, MyBatis 매퍼 작성, 사내 규약에 맞춘 모듈별 기능 개발에 참여했습니다.",
+                detail: "실제 사내 그룹웨어 요구사항을 바탕으로 화면 설계부터 DB 연동까지 전 과정을 경험하며, 실무 규모의 코드베이스를 다루는 감각을 익히고 있는 프로젝트입니다.",
+                github: "https://github.com/hyewon127", // 이 프로젝트만의 레포 주소가 있으면 여기에 넣으세요
+                // demo: "여기에_데모영상_링크",
+                // slides: "여기에_발표자료_링크",
+            },
+            k8sTodo: {
+                title: "Kubernetes 3-Tier TODO 리스트",
+                img: "https://placehold.co/700x350/22345c/ffffff?text=K8s+3-Tier+TODO", // ← 모달 상세 이미지, 실제 사진(아키텍처 다이어그램/스크린샷) 경로로 교체
+                summary: "Frontend(Nginx)·Backend(Spring Boot)·MySQL을 각각 독립된 Pod로 배포하고, Kubernetes 오브젝트만으로 서비스 디스커버리·고가용성·데이터 영속성을 구성한 3-Tier 웹 애플리케이션입니다.",
+                role: "Namespace·Secret·PV/PVC·Deployment·Service·Ingress까지 k8s 매니페스트 전체를 직접 작성하고 배포했습니다. Backend는 3개, Frontend는 2개 파드로 이중화했습니다.",
+                detail: "MySQL 데이터가 Pod 재시작 시에도 유실되지 않도록 PV/PVC로 볼륨을 연결했고, 화면에 실제로 응답한 backend Pod 이름을 표시해 Service의 로드밸런싱 동작을 눈으로 직접 확인할 수 있도록 만들었습니다.",
+                github: "https://github.com/hyewon127/k8sTodoProject", // 이 프로젝트의 실제 레포
+                // demo: "여기에_데모영상_링크",
+                // slides: "여기에_발표자료_링크",
+            },
+            project3: {
+                title: "프로젝트 3 (추가 예정)",
+                img: "https://placehold.co/700x350/dde1ee/5b6479?text=Coming+Soon", // ← 모달 상세 이미지, 실제 사진 경로로 교체
+                summary: "새로운 프로젝트를 준비 중입니다.",
+                role: "추가 예정",
+                detail: "프로젝트가 확정되면 목표, 사용 기술, 담당 역할이 이곳에 채워집니다.",
+                github: "", // 아직 레포가 없으므로 빈 값 = GitHub 버튼 안 보임
+            },
+            project4: {
+                title: "프로젝트 4 (추가 예정)",
+                img: "https://placehold.co/700x350/dde1ee/5b6479?text=Coming+Soon", // ← 모달 상세 이미지, 실제 사진 경로로 교체
+                summary: "새로운 프로젝트를 준비 중입니다.",
+                role: "추가 예정",
+                detail: "프로젝트가 확정되면 목표, 사용 기술, 담당 역할이 이곳에 채워집니다.",
+                github: "", // 아직 레포가 없으므로 빈 값 = GitHub 버튼 안 보임
+            }
+        };
+
+        // 프로젝트 데이터에 있는 github / demo / slides 값을 보고 버튼을 필요한 만큼만 생성
+        function buildModalLinks(data) {
+            const buttons = [];
+            if (data.github) {
+                buttons.push(`<a href="${data.github}" target="_blank" class="btn">GitHub</a>`);
+            }
+            if (data.demo) {
+                buttons.push(`<a href="${data.demo}" target="_blank" class="btn btn-outline">데모영상 보기</a>`);
+            }
+            if (data.slides) {
+                buttons.push(`<a href="${data.slides}" target="_blank" class="btn btn-outline">발표자료 보기</a>`);
+            }
+            return buttons.join('');
+        }
+
+        // 모달창 열기 함수
+        function openModal(id) {
+            const data = projectData[id];
+            if (!data) return;
+
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalImg').src = data.img;
+            document.getElementById('modalSummary').innerText = data.summary;
+            document.getElementById('modalRole').innerText = data.role;
+            document.getElementById('modalDetail').innerText = data.detail;
+            document.getElementById('modalLinks').innerHTML = buildModalLinks(data);
+
+            document.getElementById('portfolioModal').classList.add('active');
+        }
+
+        // 바깥 영역 클릭 시 모달 닫기 함수
+        function closeModal(event) {
+            if (event.target.id === 'portfolioModal') {
+                document.getElementById('portfolioModal').classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
