@@ -1,0 +1,8 @@
+# 배포 시 공개되면 안 되는 로컬 메모 (넷리파이_배포방법.txt, 프롬포트.txt 등)
+/*.txt
+
+# 구버전 페이지 — 배포 대상 아님
+/index_v1.html
+
+# 사용하지 않는 패널 폴더 (요약패널은 assets/summary-panels 사용)
+/assets/panels/
