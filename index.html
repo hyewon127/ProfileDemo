@@ -59,6 +59,25 @@
             line-height: 1.7;
             color: var(--ink);
             background-color: var(--bg-light);
+            /* 한글이 어절 중간에서 끊기지 않도록 (개발자로/서의 → 개발자로서의)
+               띄어쓰기 자리에서만 줄바꿈되고, 긴 영문/URL은 예외적으로 줄바꿈 허용 */
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        /* [수정 4] 한글 줄바꿈 보강
+           - 제목·짧은 문구: text-wrap: balance → 두 줄로 넘어갈 때 윗줄/아랫줄 길이를 비슷하게 맞춰
+             "마지막 줄에 단어 하나만 덩그러니 남는" 현상을 막음 (미지원 브라우저는 그냥 무시 = 안전)
+           - 본문 문단·리스트: text-wrap: pretty → 문단 끝 한 단어 고아(orphan) 줄 방지 */
+        h1, h2, h3, h4, h5,
+        .tagline,
+        .h-title,
+        .quote-block p {
+            text-wrap: balance;
+        }
+
+        p, li, dd {
+            text-wrap: pretty;
         }
 
         a {
@@ -107,7 +126,9 @@
         }
 
         .card-left {
-            width: 300px;
+            /* [수정 4] 고정 300px → 화면 폭에 따라 260~300px 사이로 유연하게.
+               노트북(1366px) 근처에서 오른쪽 본문 영역이 좀 더 넓어져 문장이 덜 좁게 꺾임 */
+            width: clamp(260px, 26%, 300px);
             flex-shrink: 0;
             padding: 44px 30px;
             display: flex;
@@ -250,7 +271,9 @@
 
         .quick-facts {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            /* [수정 4] 1fr → minmax(0, 1fr): 긴 단어(학과명 등)가 칸을 밀어 넓히지 않고
+               정해진 칸 안에서 줄바꿈되도록 최소 폭을 0으로 허용 */
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 20px;
             padding: 26px 0;
             margin-bottom: 34px;
@@ -404,6 +427,9 @@
             border-radius: 20px;
             font-weight: 500;
             letter-spacing: 0.02em;
+            /* [수정 4] 기술 태그(Spring MVC 등)는 칩 하나가 두 줄로 쪼개지지 않게 고정 */
+            white-space: nowrap;
+            display: inline-block;
         }
 
         .tag.status-live {
@@ -520,44 +546,121 @@
             margin-bottom: 15px;
         }
 
-        .modal-block {
-            margin-bottom: 18px;
+        /* [수정 5] 상세 모달을 "개요 / 개발한 부분 / 배운 점 / 아쉬운 점" 4단 구조로 통일.
+           기존 Summary·Role·Detail·Troubleshooting 블록은 채용 담당자가
+           "무엇을 직접 했는지"를 한눈에 찾기 어려워서 섹션 번호+아이콘+구분선으로 재구성 */
+        .modal-summary {
+            color: var(--ink-light);
+            margin-bottom: 22px;
         }
 
-        .modal-block:last-of-type {
-            margin-bottom: 25px;
+        .pj-sec {
+            padding: 18px 0;
+            border-top: 1px solid var(--border-color);
         }
 
-        .modal-block h4 {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
+        .pj-sec:last-of-type {
+            margin-bottom: 22px;
+        }
+
+        .pj-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .pj-icon {
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            background-color: var(--primary-tint);
             color: var(--primary-color);
-            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .modal-block p {
+        .pj-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .pj-num {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .pj-head h5 {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        /* 개요: 라벨(목적/기간/인원/기술 스택) + 값 2열 표 형태 */
+        .pj-overview {
+            display: grid;
+            grid-template-columns: 76px minmax(0, 1fr);
+            gap: 8px 14px;
+            font-size: 0.92rem;
+        }
+
+        .pj-overview dt {
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .pj-overview dd {
             color: var(--ink-light);
         }
 
-        .modal-block ul {
-            padding-left: 18px;
+        .pj-overview .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding-top: 2px;
         }
 
-        .modal-block ul li {
+        .pj-list {
+            padding-left: 18px;
+            font-size: 0.92rem;
+        }
+
+        .pj-list li {
             list-style: disc;
             color: var(--ink-light);
-            margin-bottom: 8px;
+            margin-bottom: 7px;
         }
 
-        .modal-block ul li:last-child {
+        .pj-list li:last-child {
             margin-bottom: 0;
+        }
+
+        .pj-list li::marker {
+            color: var(--primary-color);
         }
 
         .modal-links {
             display: flex;
-            gap: 15px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .pj-overview {
+                grid-template-columns: 1fr;
+                gap: 2px;
+            }
+            .pj-overview dd {
+                margin-bottom: 8px;
+            }
+            /* 모바일에서 모달 제목이 3줄 이상으로 늘어나지 않게 글자 크기 축소 */
+            .modal-title {
+                font-size: 1.4rem;
+            }
         }
 
         /* --- 7-1. 자료 뷰어 팝업 (패널/발표자료를 새 탭 이동 없이 그 자리에서 보기) --- */
@@ -723,10 +826,8 @@
                     <span class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
                     <span class="info-text"><strong>이메일</strong><a href="mailto:haewon0408@gmail.com">haewon0408@gmail.com</a></span>
                 </li>
-                <li>
-                    <span class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7.58 7-12a7 7 0 1 0-14 0c0 4.42 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
-                    <span class="info-text"><strong>거주</strong>서울시 강서구</span>
-                </li>
+                <!-- [수정 3] "거주: 서울시 강서구" 항목 삭제 (개인정보 최소화).
+                     contact-list는 flex column + gap 구조라 항목이 빠져도 간격이 자동으로 유지됨 -->
                 <li>
                     <span class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
                     <span class="info-text"><strong>GitHub</strong>github.com/hyewon127</span>
@@ -740,15 +841,20 @@
                 <h1 class="page-title">Portfolio</h1>
             </div>
 
-            <p class="tagline">원리부터 꼼꼼히 파고들고, 끝까지 붙잡고 해결하는 신입 개발자 차혜원입니다.</p>
-            <p class="desc">2026년 3월부터 한국폴리텍대학 하이테크과정 스마트금융과에 재학하며 개발자로서의 첫걸음을 내딛고 있습니다. 사내 그룹웨어 포털, 학생 성적관리 시스템 같은 실무형 프로젝트를 진행하며 백엔드와 데이터 처리 역량을 넓혀가는 중입니다.</p>
+            <!-- [수정 1] '신입' 삭제 — 경력 단계보다 일하는 방식(원리 이해 + 끝까지 해결)을 먼저 보이게 -->
+            <p class="tagline">원리부터 파고들어, 문제를 끝까지 해결하는 개발자 차혜원입니다.</p>
+            <!-- [수정 2] 학교 재학 중심 → "무엇을 만들었고 어떤 기술을 쓰는지" 중심으로 재작성.
+                 학력은 아래 Education 칸에만 남김 -->
+            <p class="desc">Java/Spring MVC 백엔드와 Python 데이터 파이프라인(ETL)을 주로 다룹니다. eGovFrame 기반 사내 그룹웨어 포털(6개 모듈, 61개 API)을 혼자 설계부터 구현까지 진행했고, 학생 성적관리 시스템에서는 MyBatis 없이 JDBC로 데이터 계층을 직접 작성했습니다. 외국인·기관 매매동향을 매일 자동 수집·적재하는 주식 ETL 파이프라인을 만들며 데이터 정합성 문제를 해결했습니다. 프로젝트에서 MyBatis, Oracle, JSP, FastAPI, Docker, Linux, Git을 직접 사용했습니다.</p>
 
             <div class="quick-facts">
                 <div class="fact-item">
                     <span class="fact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg></span>
                     <div>
                         <h4>Education</h4>
-                        <p>2026.03 ~<br>한국폴리텍대학 하이테크과정<br>스마트금융과</p>
+                        <!-- 학과명 변경: 스마트금융과 → AI핀테크융합과(스마트금융과).
+                             괄호 앞에 공백을 둬서 칸이 좁을 때 괄호 앞에서 자연스럽게 줄바꿈되게 함 -->
+                        <p>2026.03 ~<br>한국폴리텍대학 하이테크과정<br>AI핀테크융합과 (스마트금융과)</p>
                     </div>
                 </div>
                 <div class="fact-item">
@@ -843,22 +949,42 @@
             <button class="close-btn" onclick="document.getElementById('portfolioModal').classList.remove('active')" aria-label="닫기">&times;</button>
             <img src="" alt="상세 이미지" class="modal-img" id="modalImg">
             <h2 class="modal-title" id="modalTitle">프로젝트 제목</h2>
-            <div class="modal-block">
-                <p id="modalSummary"></p>
-            </div>
-            <div class="modal-block">
-                <h4>Role</h4>
-                <p id="modalRole"></p>
-            </div>
-            <div class="modal-block">
-                <h4>Detail</h4>
-                <p id="modalDetail"></p>
-            </div>
-            <!-- 트러블슈팅 항목이 있는 프로젝트만 자동으로 노출됩니다 (JS의 projectData.trouble 배열 참고) -->
-            <div class="modal-block" id="modalTroubleBlock" style="display:none;">
-                <h4>Troubleshooting</h4>
-                <ul id="modalTrouble"></ul>
-            </div>
+            <p class="modal-summary" id="modalSummary"></p>
+
+            <!-- [수정 5] 프로젝트 상세 4단 구조: 01 개요 / 02 개발한 부분 / 03 배운 점 / 04 아쉬운 점 & 개선 방향
+                 내용은 아래 <script>의 projectData에서 채워지고, 값이 없는 줄·섹션은 JS가 자동으로 숨김 -->
+            <section class="pj-sec" id="secOverview">
+                <div class="pj-head">
+                    <span class="pj-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M9 10h6M9 14h6M9 18h3"/></svg></span>
+                    <span class="pj-num">01</span>
+                    <h5>프로젝트 개요</h5>
+                </div>
+                <dl class="pj-overview" id="modalOverview"></dl>
+            </section>
+            <section class="pj-sec" id="secBuilt">
+                <div class="pj-head">
+                    <span class="pj-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m14 4-4 16"/></svg></span>
+                    <span class="pj-num">02</span>
+                    <h5>개발한 부분</h5>
+                </div>
+                <ul class="pj-list" id="modalBuilt"></ul>
+            </section>
+            <section class="pj-sec" id="secLearned">
+                <div class="pj-head">
+                    <span class="pj-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3Z"/></svg></span>
+                    <span class="pj-num">03</span>
+                    <h5>배운 점</h5>
+                </div>
+                <ul class="pj-list" id="modalLearned"></ul>
+            </section>
+            <section class="pj-sec" id="secImprove">
+                <div class="pj-head">
+                    <span class="pj-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 9 11l4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+                    <span class="pj-num">04</span>
+                    <h5>아쉬운 점 &amp; 개선 방향</h5>
+                </div>
+                <ul class="pj-list" id="modalImprove"></ul>
+            </section>
             <!-- 아래 버튼들은 프로젝트별로 다르게 뜨도록 JS(projectData)에서 만들어줍니다.
                  GitHub / 데모영상 / 발표자료 버튼을 켜고 끄려면 아래 <script>의 projectData를 수정하세요. -->
             <div class="modal-links" id="modalLinks"></div>
@@ -908,20 +1034,45 @@
         //        옆의 "다운로드" 링크로 파일을 내려받을 수도 있습니다.
         //     4) 파일 확장자가 .pdf면 문서 뷰어로, 그 외(jpg/png 등)면 이미지로 자동 표시됩니다.
         // =====================================================================
+        // [수정 5] 프로젝트 데이터 구조 변경
+        //   summary   : 모달 맨 위 한두 줄 소개
+        //   overview  : { purpose(목적), period(기간), team(인원), stack(기술 스택 배열) }  → 01 프로젝트 개요
+        //   built     : 직접 구현한 기능 (짧게, "무엇을 → 어떻게 구현" 형태)             → 02 개발한 부분
+        //   learned   : 기술적으로 새로 이해한 원리                                      → 03 배운 점
+        //   improve   : 한계 + 다음에 어떻게 할지                                         → 04 아쉬운 점 & 개선 방향
+        //   값이 ''(빈 문자열)이거나 빈 배열이면 해당 줄/섹션은 화면에서 자동으로 숨겨집니다.
+        //   (기존 role / detail / trouble 내용은 위 4개 섹션으로 나눠 옮겼습니다)
         const projectData = {
             groupware: {
                 title: "사내 그룹웨어 포털 시스템",
                 img: "assets/summary-panels/groupware-summary.png", // 상세 모달 메인 이미지 = 요약패널
                 summaryPanel: "assets/summary-panels/groupware-summary.png", // "요약패널 확인하기" 버튼에서 보여줄 이미지
                 summaryPanelPdf: "assets/summary-panels/groupware-summary.pdf", // 뷰어의 다운로드 링크 (원본 PDF)
-                summary: "eGovFrame 4.3.1 기반으로 혼자 설계부터 배포까지 진행한 사내 그룹웨어 포털입니다. 로그인/대시보드·공지사항·게시판·일정관리·쪽지·관리자 6개 모듈, 총 61개 API 엔드포인트로 구성했습니다.",
-                role: "요구사항 분석, DB/테이블 설계, 화면(JSP) 구현, Spring MVC 서비스 로직과 MyBatis 매퍼 작성까지 전 과정을 솔로로 개발했습니다.",
-                detail: "AWS EC2 배포를 준비하며 Oracle에서 MySQL로 DB 마이그레이션을 진행하고 있습니다.",
-                trouble: [
-                    "트랜잭션 매니저 AOP 포인트컷 설정 오류 — 포인트컷 표현식을 서비스 계층 패키지 구조에 맞게 재정의해 해결",
-                    "파일 업로드 경로 문제 — WAS 재배포 시 배포 폴더가 초기화되며 업로드 파일이 유실되는 문제를, 외부 고정 경로에 저장하도록 변경해 해결",
-                    "MyBatis 카멜/언더바 컬럼 매핑 불일치 — mapUnderscoreToCamelCase 설정과 resultMap 정비로 해결",
-                    "Oracle 예약어 충돌 — COMMENT 컬럼명이 Oracle 예약어와 충돌해 BOARD_COMMENT로 변경",
+                summary: "eGovFrame 4.3.1 기반으로 설계부터 구현까지 혼자 진행한 사내 그룹웨어 포털입니다. 6개 모듈, 61개 API 엔드포인트로 구성했습니다.",
+                overview: {
+                    purpose: "공지·게시판·일정·쪽지 등 사내 업무 소통을 한 곳에서 처리하는 포털 구축",
+                    period: "2026.06 ~ 2026.07", // git 첫/마지막 커밋 기준 — 실제 기간과 다르면 수정
+                    team: "1인 (기획·설계·개발 전 과정)",
+                    stack: ["eGovFrame 4.3.1", "Spring MVC", "MyBatis", "Oracle XE", "JSP", "jQuery", "Tomcat 9"],
+                },
+                built: [
+                    "로그인/대시보드·공지사항·게시판·일정관리·쪽지·관리자 6개 모듈 설계 및 구현 (API 61개)",
+                    "요구사항 정의 → 테이블 설계 → JSP 화면 → Spring MVC 서비스 → MyBatis 매퍼까지 전 계층 개발",
+                    "MyBatis 동적 쿼리로 게시판·공지 검색/페이징 구현",
+                    "공용 첨부파일 테이블(ATTACH_FILE) 설계 — ref_type 하나로 공지·게시판·쪽지 첨부 통합 관리",
+                    "deleted_at 기반 소프트 삭제로 데이터 이력 보존",
+                    "권한(role) 기반 관리자 메뉴 접근 제어, 쪽지 읽음 카운트·대시보드 연동 구현",
+                ],
+                learned: [
+                    "@Transactional은 AOP 프록시로 적용된다 — 포인트컷이 서비스 패키지와 어긋나면 오류 없이 트랜잭션이 빠진다는 것을 확인하고 표현식을 재정의",
+                    "WAS 재배포 시 배포 폴더가 새로 풀리므로, 업로드 파일은 애플리케이션 밖 고정 경로에 저장해야 유실되지 않는다",
+                    "MyBatis 결과 매핑 규칙 — mapUnderscoreToCamelCase(자동 변환)와 resultMap(명시 매핑)의 역할 차이",
+                    "DB 예약어(COMMENT)는 컬럼명으로 쓸 수 없다 — BOARD_COMMENT로 바꾸며 DB 이식성을 고려한 명명 습관을 들임",
+                ],
+                improve: [
+                    "비밀번호를 평문으로 저장 → 다음엔 BCrypt 해시와 Spring Security로 인증 구조 개선",
+                    "브랜치 병합 중 기능 코드가 유실된 경험 → 커밋을 기능 단위로 작게 나누고, 병합 전 diff를 확인하는 습관 적용",
+                    "Oracle → MySQL 마이그레이션 후 AWS EC2 배포 진행 중",
                 ],
                 github: "https://github.com/hyewon127/groupware-portal", // 이 프로젝트만의 레포 주소가 있으면 여기에 넣으세요
                 demo: "https://www.youtube.com/watch?v=UjlqTqi84m0&feature=youtu.be",
@@ -929,14 +1080,36 @@
                 // panel: "assets/panels/groupware-panel.pdf",
             },
             k8s: {
-                title: "Kubernetes 기반 컨테이너 배포 프로젝트",
+                // [수정 5] 기존 설명("문제원형실습 Spring+DB 컨테이너화")이 실제 결과물(TODO 3-Tier 앱)과 달라 요약패널 기준으로 정정
+                title: "Kubernetes 3‑Tier TODO 앱 배포", // "3‑Tier"의 하이픈은 줄바꿈 안 되는 하이픈(U+2011) — 모바일에서 "3-/Tier"로 끊기는 것 방지
                 img: "assets/summary-panels/k8s-summary.png", // 상세 모달 메인 이미지 = 요약패널
                 summaryPanel: "assets/summary-panels/k8s-summary.png", // "요약패널 확인하기" 버튼에서 보여줄 이미지
                 summaryPanelPdf: "assets/summary-panels/k8s-summary.pdf", // 뷰어의 다운로드 링크 (원본 PDF)
-                summary: "1학기에 진행한 문제원형실습(Spring+DB) 프로젝트를 컨테이너화하여 쿠버네티스 파드로 배포한 인프라 프로젝트입니다.",
-                role: "VirtualBox 위에 kubeadm으로 클러스터를 직접 구축하고, 기존 Spring+DB 애플리케이션을 Docker 이미지로 만들어 파드로 배포했습니다.",
-                detail: "클라우드 환경이 아닌 로컬 VirtualBox 클러스터라 LoadBalancer 타입 서비스를 지원하지 않아, NodePort로 서비스를 외부에 노출하도록 구성했습니다.",
-                github: "https://github.com/hyewon127/k8sTodoProject", // ← 이 프로젝트의 실제 레포 주소로 확인/교체하세요
+                summary: "Spring Boot TODO 리스트 앱과 MySQL을 컨테이너화해, 직접 구축한 쿠버네티스 클러스터에 3-Tier 구조로 배포한 인프라 프로젝트입니다.",
+                overview: {
+                    purpose: "애플리케이션·DB를 쿠버네티스 리소스로 배포하고, Pod 재시작에도 데이터가 유지되는 구조 구현",
+                    period: "2026.08",
+                    team: "", // TODO: 인원 확인 후 입력 (예: "1인")
+                    stack: ["Kubernetes (kubeadm)", "Docker", "Spring Boot", "JPA", "MySQL 8", "VirtualBox"],
+                },
+                built: [
+                    "VirtualBox VM 2대(master/worker)에 kubeadm으로 클러스터 직접 구축",
+                    "Spring Boot + JPA로 TODO CRUD REST API(/api/todos) 개발",
+                    "멀티 스테이지 Dockerfile로 이미지 경량화 후 Docker Hub에 푸시",
+                    "Secret으로 DB 접속 정보 분리, PV/PVC로 MySQL 데이터 영속화",
+                    "Deployment(백엔드 replica 3) + ClusterIP Service로 내부 통신, NodePort로 외부 노출",
+                ],
+                learned: [
+                    "Pod는 언제든 새로 만들어지는 일회성 단위 — 상태(DB 데이터)는 PV/PVC로 Pod 밖에 둬야 한다",
+                    "Service 이름이 클러스터 DNS로 풀리는 원리 — 임시 Pod에서 mysql-service로 접속해 네트워크를 단계별로 검증",
+                    "CrashLoopBackOff를 kubectl logs로 추적 — MySQL 8 기본 인증(caching_sha2_password)이 useSSL=false에서 공개키 조회를 막은 것이 원인, allowPublicKeyRetrieval=true로 해결",
+                    "설정은 이미지가 아닌 YAML(env)에 두면 재빌드 없이 apply만으로 바꿀 수 있다",
+                ],
+                improve: [
+                    "로컬 클러스터라 LoadBalancer 미지원 → NodePort로 노출. 다음엔 Ingress로 경로 기반 라우팅 적용",
+                    "MySQL을 Deployment로 배포 → 상태 저장 워크로드에 맞는 StatefulSet 적용 검토",
+                ],
+                github: "https://github.com/hyewon127/k8sTodoProject",
                 // demo: "여기에_데모영상_링크",
                 // slides: "여기에_발표자료_링크",
                 // panel: "assets/panels/k8s-panel.pdf",
@@ -946,12 +1119,28 @@
                 img: "assets/summary-panels/stock-etl-summary.png", // 상세 모달 메인 이미지 = 요약패널
                 summaryPanel: "assets/summary-panels/stock-etl-summary.png", // "요약패널 확인하기" 버튼에서 보여줄 이미지
                 summaryPanelPdf: "assets/summary-panels/stock-etl-summary.pdf", // 뷰어의 다운로드 링크 (원본 PDF)
-                summary: "pykrx로 과거 데이터를 대량 적재하고 KIS API로 매일 증분 수집하며, 외국인·기관 매매동향을 자동으로 쌓는 ETL 파이프라인입니다.",
-                role: "수집 스크립트, UNIQUE 제약을 통한 중복 방지 로직, WSL cron과 Windows 작업 스케줄러를 이용한 자동화까지 파이프라인 전체를 설계·구현했습니다.",
-                detail: "적재된 데이터를 확인할 수 있는 대시보드(Spring MVC + Chart.js)는 AI 도구를 활용해 구현했습니다.",
-                trouble: [
-                    "수집 소스 간 단위 불일치 — pykrx는 원 단위, KIS API는 백만원 단위로 매매동향 수치를 반환해 1,000,000배 차이가 발생, 적재 단계(mapper)에서 단위를 정규화해 해결",
-                    "중복 적재 문제 — 동일 종목·동일 일자 데이터가 재수집되며 중복되는 문제를 UNIQUE 제약으로 방지",
+                summary: "pykrx로 과거 데이터를 대량 적재하고 KIS API로 매일 증분 수집해, 외국인·기관 매매동향을 자동으로 쌓는 ETL 파이프라인입니다.",
+                overview: {
+                    purpose: "외국인·기관(스마트머니) 수급 흐름을 분석할 수 있도록 매매동향 데이터를 매일 자동 적재",
+                    period: "", // TODO: 기간 입력 (예: "2026.06 ~ 2026.07")
+                    team: "", // TODO: 인원 입력
+                    stack: ["Python", "pykrx", "KIS Open API", "PostgreSQL", "cron (WSL)", "Spring MVC", "MyBatis", "Chart.js"],
+                },
+                built: [
+                    "pykrx로 과거 매매동향 초기 대량 적재(Full Load) 스크립트 작성",
+                    "KIS Open API로 일별 증분 수집(Incremental) 스크립트 작성",
+                    "(종목, 일자) UNIQUE 제약으로 재수집 시 중복 적재 방지",
+                    "WSL cron + Windows 작업 스케줄러로 매일 자동 실행",
+                    "MyBatis 매퍼에서 소스별 단위를 원 단위로 정규화해 조회",
+                    "AI 도구를 활용해 적재 데이터 확인용 대시보드(Spring MVC + Chart.js) 구성",
+                ],
+                learned: [
+                    "같은 지표라도 소스마다 단위가 다를 수 있다 — KIS 거래대금은 백만원, pykrx는 원 단위라 1,000,000배 차이. 적재 전 API 명세 확인이 필수",
+                    "여러 번 실행해도 결과가 같게(멱등성) 만드는 방법 — 코드가 아니라 DB 제약으로 중복을 막는 설계",
+                    "초기 적재와 증분 적재를 분리해야 하는 이유 — 과거 데이터는 한 번, 신규 데이터는 매일",
+                ],
+                improve: [
+                    "단위 정규화를 조회(mapper) 단계에서 처리 → 다음엔 적재(Transform) 단계에서 원 단위로 통일해 저장",
                 ],
                 github: "", // TODO: 레포 URL 추가
                 // demo: "여기에_데모영상_링크",
@@ -963,9 +1152,23 @@
                 img: "assets/summary-panels/restaurant-summary.png", // 상세 모달 메인 이미지 = 요약패널
                 summaryPanel: "assets/summary-panels/restaurant-summary.png", // "요약패널 확인하기" 버튼에서 보여줄 이미지
                 summaryPanelPdf: "assets/summary-panels/restaurant-summary.pdf", // 뷰어의 다운로드 링크 (원본 PDF)
-                summary: "소상공인 공공데이터 API를 활용해 화곡동 지역 음식점을 카테고리별로 검색할 수 있는 웹사이트입니다.",
-                role: "Spring MVC → FastAPI(REST 호출) → MySQL 조회 → JSON 응답 → JSP 렌더링으로 이어지는 전체 구조를 설계하고 구현했습니다.",
-                detail: "Spring MVC 단에서 FastAPI 서버로 REST 요청을 보내고, FastAPI가 MySQL을 조회해 JSON으로 응답하면 이를 JSP 화면에 렌더링하는 방식으로 백엔드 간 연동을 구성했습니다.",
+                summary: "소상공인 공공데이터를 활용해 화곡동 지역 음식점을 카테고리별로 검색할 수 있는 웹사이트입니다.",
+                overview: {
+                    purpose: "공공데이터로 지역(화곡동) 음식점을 카테고리별로 쉽게 찾는 검색 서비스",
+                    period: "", // TODO: 기간 입력
+                    team: "", // TODO: 인원 입력
+                    stack: ["Spring MVC", "FastAPI", "MySQL", "JSP", "공공데이터 API"],
+                },
+                built: [
+                    "Spring MVC → FastAPI(REST) → MySQL → JSON → JSP로 이어지는 요청 흐름 설계",
+                    "FastAPI에서 MySQL을 조회해 JSON으로 응답하는 REST API 구현",
+                    "Spring MVC에서 FastAPI를 호출하고 결과를 JSP 화면에 렌더링",
+                    "카테고리별 음식점 검색 기능 구현",
+                ],
+                learned: [
+                    "언어가 다른 두 백엔드(Java ↔ Python)도 HTTP + JSON 형식만 맞추면 독립적으로 연동할 수 있다",
+                ],
+                improve: [], // TODO: 아쉬운 점 & 개선 방향 입력
                 github: "", // TODO: 레포 URL 추가
                 // demo: "여기에_데모영상_링크",
                 // slides: "여기에_발표자료_링크",
@@ -977,8 +1180,22 @@
                 summaryPanel: "assets/summary-panels/grades-summary.png", // "요약패널 확인하기" 버튼에서 보여줄 이미지
                 summaryPanelPdf: "assets/summary-panels/grades-summary.pdf", // 뷰어의 다운로드 링크 (원본 PDF)
                 summary: "Java/Spring MVC와 순수 JDBC(MyBatis 미사용)로 구현한 학생 성적관리 시스템입니다.",
-                role: "요구사항 분석부터 테이블 설계, 화면 구현, CRUD 및 통계 기능 개발까지 전 과정을 담당했습니다.",
-                detail: "학생/과목별 성적을 등록하면 평균과 등급을 자동으로 계산·집계하는 기능을 구현하며, JDBC로 직접 데이터 처리와 화면 로직을 설계하는 경험을 쌓았습니다.",
+                overview: {
+                    purpose: "학생·과목별 성적을 등록하고 평균·등급을 자동 집계하는 관리 시스템",
+                    period: "", // TODO: 기간 입력
+                    team: "", // TODO: 인원 입력
+                    stack: ["Java", "Spring MVC", "JDBC", "JSP"], // TODO: 사용 DB 추가
+                },
+                built: [
+                    "요구사항 분석부터 테이블 설계, 화면 구현까지 전 과정 개발",
+                    "학생·과목별 성적 등록/조회/수정/삭제(CRUD) 구현",
+                    "평균·등급 자동 계산 및 통계 집계 기능 구현",
+                    "MyBatis 없이 JDBC(PreparedStatement·ResultSet)로 DAO 직접 작성",
+                ],
+                learned: [
+                    "MyBatis가 대신해 주던 커넥션 관리·파라미터 바인딩·결과 매핑을 JDBC로 직접 다루며 프레임워크의 역할을 이해",
+                ],
+                improve: [], // TODO: 아쉬운 점 & 개선 방향 입력
                 github: "https://github.com/hyewon127/students_project", // 이 프로젝트만의 레포 주소가 있으면 여기에 넣으세요
                 // demo: "여기에_데모영상_링크",
                 // slides: "여기에_발표자료_링크",
@@ -987,9 +1204,19 @@
             rag: {
                 title: "RAG 기반 지자체 지원사업 정보 검색 및 요약 챗봇",
                 img: "https://placehold.co/700x350/dde1ee/5b6479?text=In+Progress", // ← 모달 상세 이미지, 실제 사진 경로로 교체
-                summary: "지자체 지원사업 공고 PDF를 기반으로 질의응답하는 RAG 챗봇 프로젝트입니다. 현재 개발이 진행 중입니다.",
-                role: "OpenSearch에 공고 PDF를 임베딩해 색인하고, FastAPI로 검색-생성 파이프라인을 구성해 LLM API로 답변을 생성하는 구조를 설계하고 있습니다.",
-                detail: "아직 개발 진행 단계이며, 완료된 프로젝트가 아닙니다. 진행 상황에 따라 이 카드의 내용이 업데이트될 예정입니다.",
+                summary: "지자체 지원사업 공고 PDF를 기반으로 질의응답하는 RAG 챗봇입니다. 현재 개발 진행 중이며, 진행 상황에 따라 내용을 업데이트합니다.",
+                overview: {
+                    purpose: "흩어진 지자체 지원사업 공고를 질문 한 번으로 찾고 요약해 주는 챗봇",
+                    period: "", // TODO: 시작 시점 입력 (예: "2026.09 ~ 진행 중")
+                    team: "", // TODO: 인원 입력
+                    stack: ["Python", "FastAPI", "OpenSearch", "LLM API"],
+                },
+                built: [
+                    "공고 PDF 임베딩 → OpenSearch 색인 구조 설계",
+                    "FastAPI로 검색-생성(RAG) 파이프라인 구성 중",
+                ],
+                learned: [],
+                improve: [],
                 github: "", // 아직 레포가 없으므로 빈 값 = GitHub 버튼 안 보임
             },
         };
@@ -1045,6 +1272,21 @@
             document.getElementById('viewerImg').src = '';
         }
 
+        // [수정 5] 데이터 문자열을 HTML로 넣기 전에 <, > 같은 특수문자를 안전하게 바꿔주는 함수
+        //   (예: "Java ↔ Python", "<li>" 같은 글자가 태그로 해석되어 화면이 깨지는 것 방지)
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // [수정 5] 섹션 채우기 공통 함수: 내용(html 조각 배열)이 있으면 넣고 보여주고, 없으면 섹션째 숨김
+        function fillSection(sectionId, bodyId, htmlItems) {
+            const section = document.getElementById(sectionId);
+            document.getElementById(bodyId).innerHTML = htmlItems.join('');
+            section.style.display = htmlItems.length ? '' : 'none';
+        }
+
         // 모달창 열기 함수
         function openModal(id) {
             const data = projectData[id];
@@ -1060,16 +1302,26 @@
             modalImg.onclick = usesPanelImage ? () => openSummaryPanel(null, id) : null;
 
             document.getElementById('modalSummary').innerText = data.summary;
-            document.getElementById('modalRole').innerText = data.role;
-            document.getElementById('modalDetail').innerText = data.detail;
 
-            const troubleBlock = document.getElementById('modalTroubleBlock');
-            if (data.trouble && data.trouble.length) {
-                document.getElementById('modalTrouble').innerHTML = data.trouble.map(item => `<li>${item}</li>`).join('');
-                troubleBlock.style.display = '';
-            } else {
-                troubleBlock.style.display = 'none';
+            // [수정 5] 01 개요: 값이 있는 줄만 dt(라벨)/dd(값) 쌍으로 추가, 기술 스택은 태그 칩으로 표시
+            const ov = data.overview || {};
+            const rows = [
+                ['목적', ov.purpose],
+                ['기간', ov.period],
+                ['인원', ov.team],
+            ].filter(([, value]) => value)
+             .map(([label, value]) => `<dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd>`);
+            if (ov.stack && ov.stack.length) {
+                const tags = ov.stack.map(s => `<span class="tag">${escapeHtml(s)}</span>`).join('');
+                rows.push(`<dt>기술 스택</dt><dd class="tags">${tags}</dd>`);
             }
+            fillSection('secOverview', 'modalOverview', rows);
+
+            // [수정 5] 02~04: 배열 항목을 bullet(li)로 채우고, 비어 있으면 섹션 전체를 숨김
+            const toItems = list => (list || []).map(item => `<li>${escapeHtml(item)}</li>`);
+            fillSection('secBuilt', 'modalBuilt', toItems(data.built));
+            fillSection('secLearned', 'modalLearned', toItems(data.learned));
+            fillSection('secImprove', 'modalImprove', toItems(data.improve));
 
             document.getElementById('modalLinks').innerHTML = buildModalLinks(data);
 
