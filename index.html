@@ -907,12 +907,13 @@
                     </div>
                 </div>
 
-                <div class="highlight-card" onclick="openModal('restaurant')">
-                    <img src="assets/summary-panels/restaurant-summary.png" alt="화곡동 소상공인 상권 검색 요약패널" class="h-thumb is-panel">
+                <!-- 음식점 검색 웹사이트(restaurant) 카드는 완성도가 낮아 보여 제외함 -->
+                <div class="highlight-card" onclick="openModal('rag')">
+                    <img src="assets/summary-panels/rag-summary.png" alt="RAG 지원사업 챗봇 요약패널" class="h-thumb is-panel">
                     <div class="h-body">
-                        <p class="h-title">04. 음식점 검색 웹사이트</p>
-                        <span class="tag status-live">Backend</span>
-                        <button type="button" class="h-toggle" data-id="restaurant" onclick="openSummaryPanel(event, 'restaurant')">요약패널 확인하기</button>
+                        <p class="h-title">04. RAG 지원사업 챗봇</p>
+                        <span class="tag status-live">AI · RAG</span>
+                        <button type="button" class="h-toggle" data-id="rag" onclick="openSummaryPanel(event, 'rag')">요약패널 확인하기</button>
                     </div>
                 </div>
 
@@ -922,15 +923,6 @@
                         <p class="h-title">05. 학생 성적관리 시스템</p>
                         <span class="tag status-live">Backend</span>
                         <button type="button" class="h-toggle" data-id="grades" onclick="openSummaryPanel(event, 'grades')">요약패널 확인하기</button>
-                    </div>
-                </div>
-
-                <div class="highlight-card" onclick="openModal('rag')">
-                    <img src="https://placehold.co/400x250/dde1ee/5b6479?text=In+Progress" alt="RAG 기반 지자체 지원사업 정보 검색 및 요약 챗봇 (진행중)" class="h-thumb">
-                    <div class="h-body">
-                        <p class="h-title">06. RAG 지원사업 챗봇</p>
-                        <span class="tag status-planned">In Progress</span>
-                        <button type="button" class="h-toggle" data-id="rag" onclick="openSummaryPanel(event, 'rag')">요약패널 확인하기</button>
                     </div>
                 </div>
 
@@ -1147,33 +1139,6 @@
                 // slides: "여기에_발표자료_링크",
                 // panel: "assets/panels/etl-panel.pdf",
             },
-            restaurant: {
-                title: "음식점 검색 웹사이트",
-                img: "assets/summary-panels/restaurant-summary.png", // 상세 모달 메인 이미지 = 요약패널
-                summaryPanel: "assets/summary-panels/restaurant-summary.png", // "요약패널 확인하기" 버튼에서 보여줄 이미지
-                summaryPanelPdf: "assets/summary-panels/restaurant-summary.pdf", // 뷰어의 다운로드 링크 (원본 PDF)
-                summary: "소상공인 공공데이터를 활용해 화곡동 지역 음식점을 카테고리별로 검색할 수 있는 웹사이트입니다.",
-                overview: {
-                    purpose: "공공데이터로 지역(화곡동) 음식점을 카테고리별로 쉽게 찾는 검색 서비스",
-                    period: "", // TODO: 기간 입력
-                    team: "", // TODO: 인원 입력
-                    stack: ["Spring MVC", "FastAPI", "MySQL", "JSP", "공공데이터 API"],
-                },
-                built: [
-                    "Spring MVC → FastAPI(REST) → MySQL → JSON → JSP로 이어지는 요청 흐름 설계",
-                    "FastAPI에서 MySQL을 조회해 JSON으로 응답하는 REST API 구현",
-                    "Spring MVC에서 FastAPI를 호출하고 결과를 JSP 화면에 렌더링",
-                    "카테고리별 음식점 검색 기능 구현",
-                ],
-                learned: [
-                    "언어가 다른 두 백엔드(Java ↔ Python)도 HTTP + JSON 형식만 맞추면 독립적으로 연동할 수 있다",
-                ],
-                improve: [], // TODO: 아쉬운 점 & 개선 방향 입력
-                github: "", // TODO: 레포 URL 추가
-                // demo: "여기에_데모영상_링크",
-                // slides: "여기에_발표자료_링크",
-                // panel: "assets/panels/restaurant-panel.pdf",
-            },
             grades: {
                 title: "학생 성적관리 시스템",
                 img: "assets/summary-panels/grades-summary.png", // 상세 모달 메인 이미지 = 요약패널
@@ -1202,22 +1167,37 @@
                 // panel: "assets/panels/grades-panel.pdf",
             },
             rag: {
-                title: "RAG 기반 지자체 지원사업 정보 검색 및 요약 챗봇",
-                img: "https://placehold.co/700x350/dde1ee/5b6479?text=In+Progress", // ← 모달 상세 이미지, 실제 사진 경로로 교체
-                summary: "지자체 지원사업 공고 PDF를 기반으로 질의응답하는 RAG 챗봇입니다. 현재 개발 진행 중이며, 진행 상황에 따라 내용을 업데이트합니다.",
+                title: "RAG 지원사업 챗봇 (LocalGovSupportRAG)",
+                img: "assets/summary-panels/rag-summary.png", // 상세 모달 메인 이미지 = 요약패널
+                summaryPanel: "assets/summary-panels/rag-summary.png", // "요약패널 확인하기" 버튼에서 보여줄 이미지
+                summaryPanelPdf: "assets/summary-panels/rag-summary.pdf", // 뷰어의 다운로드 링크 (원본 PDF)
+                summary: "기업마당 지원사업 공고 650여 건을 근거로, 어느 공고에서 찾은 내용인지 [번호]로 인용해 답하는 RAG 챗봇입니다. 유료 API 없이 로컬 LLM으로 내 PC에서 전부 동작합니다.",
                 overview: {
-                    purpose: "흩어진 지자체 지원사업 공고를 질문 한 번으로 찾고 요약해 주는 챗봇",
-                    period: "", // TODO: 시작 시점 입력 (예: "2026.09 ~ 진행 중")
-                    team: "", // TODO: 인원 입력
-                    stack: ["Python", "FastAPI", "OpenSearch", "LLM API"],
+                    purpose: "공고 제목을 몰라도 자기 말로 물으면 맞는 지원사업을 찾아 주고, 근거가 없으면 지어내지 않는 챗봇",
+                    period: "2026.08 ~ 2026.09",
+                    team: "1인",
+                    stack: ["Python", "FastAPI", "OpenSearch", "ko-sroberta", "Ollama (qwen2.5 7B)", "SQLite", "HTML·JS"],
                 },
                 built: [
-                    "공고 PDF 임베딩 → OpenSearch 색인 구조 설계",
-                    "FastAPI로 검색-생성(RAG) 파이프라인 구성 중",
+                    "기업마당 Open API 수집 → PDF·HWP·HWPX 본문 추출 → 청킹 → 임베딩 → OpenSearch 색인 파이프라인 구축",
+                    "BM25(단어 일치) + kNN(의미 검색) 하이브리드 검색 — 점수 스케일이 달라 min-max 정규화 후 0.4 : 0.6 가중합",
+                    "가드레일 2단 — 검색 유사도가 낮으면 LLM 호출 전 차단, 답변의 [번호] 인용을 코드로 검증해 근거 없는 답변 폐기",
+                    "FastAPI 백엔드 + 챗봇 웹 화면(인용 번호 → 근거 공고 카드), 대화 기록 검토 화면(좋음/나쁨 판정)",
+                    "매일 06:00 새 공고만 골라 같은 파이프라인으로 반영하는 증분 동기화(작업 스케줄러)",
+                    "평가 질의셋 직접 라벨링 — Hit@5 88.9% · 출처 인용률 100% · 근거 없는 수치 0%, 자동 테스트 241개",
                 ],
-                learned: [],
-                improve: [],
-                github: "", // 아직 레포가 없으므로 빈 값 = GitHub 버튼 안 보임
+                learned: [
+                    "Ollama가 읽기 한도(4096토큰)를 넘는 프롬프트를 에러 없이 잘라내고 있었다 — '근거가 있는데 정보 없음'의 원인을 토큰 수로 추적해 Modelfile로 16k 모델 생성",
+                    "임베딩 모델은 앞 128토큰만 읽는다 — 청크를 90토큰 창으로 나눠 임베딩해 1위 정확도 48% → 63%",
+                    "프롬프트 지시만으로는 형식이 지켜지지 않는다 — 7B 모델의 인용률 48%를 형식 예시 한 개로 100%까지 올리고, 코드 검증을 함께 둠",
+                    "공고 제목을 보고 만든 질의는 점수가 부풀려진다 — 표현을 바꾼 질의로 다시 재니 BM25 단독은 37%로 무너지고 kNN이 성능을 끌고 감",
+                ],
+                improve: [
+                    "로컬 7B라 응답 평균 6.5초(목표 5초) → 더 큰 모델이나 클라우드 LLM과 비교 평가",
+                    "스캔본 공고는 텍스트가 없어 제외 → OCR 도입",
+                    "BM25가 조사를 구분 못 함(\"벤처나라에\" ≠ \"벤처나라\") → 한국어 형태소 분석기(nori) 적용 후 재색인",
+                ],
+                github: "https://github.com/hyewon127/LocalGovSupportRAG",
             },
         };
 
