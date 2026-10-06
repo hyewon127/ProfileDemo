@@ -265,8 +265,14 @@
         .card-right .desc {
             font-size: 0.95rem;
             color: var(--ink-light);
-            max-width: 62ch;
+            /* [수정 5] max-width(62ch) 제거 → 위 제목·아래 구분선과 같은 폭(오른쪽 영역 전체)까지 채움 */
             margin-bottom: 30px;
+        }
+
+        /* [수정 5] 문장 단위 줄바꿈: 문장마다 새 줄에서 시작하게 해서
+           한 문장이 앞 문장 꼬리에 붙어 줄 중간에서 시작했다가 끊기는 현상을 막음 */
+        .card-right .desc .sent {
+            display: block;
         }
 
         .quick-facts {
@@ -845,7 +851,14 @@
             <p class="tagline">원리부터 파고들어, 문제를 끝까지 해결하는 개발자 차혜원입니다.</p>
             <!-- [수정 2] 학교 재학 중심 → "무엇을 만들었고 어떤 기술을 쓰는지" 중심으로 재작성.
                  학력은 아래 Education 칸에만 남김 -->
-            <p class="desc">Java/Spring MVC 백엔드와 Python 데이터 파이프라인(ETL)을 주로 다룹니다. eGovFrame 기반 사내 그룹웨어 포털(6개 모듈, 61개 API)을 혼자 설계부터 구현까지 진행했고, 학생 성적관리 시스템에서는 MyBatis 없이 JDBC로 데이터 계층을 직접 작성했습니다. 외국인·기관 매매동향을 매일 자동 수집·적재하는 주식 ETL 파이프라인을 만들며 데이터 정합성 문제를 해결했습니다. 기업마당 지원사업 공고를 근거로 출처를 인용해 답하는 RAG 챗봇을 로컬 LLM으로 구축했고, 직접 만든 평가셋으로 검색·답변 품질을 측정하며 개선했습니다. 프로젝트에서 MyBatis, Oracle, JSP, FastAPI, OpenSearch, Docker, Linux, Git을 직접 사용했습니다.</p>
+            <!-- [수정 5] 문장마다 span.sent로 감싸 문장 단위로 줄을 시작 (CSS에서 display:block) -->
+            <p class="desc">
+                <span class="sent">Java/Spring MVC 백엔드와 Python 데이터 파이프라인(ETL)을 주로 다룹니다.</span>
+                <span class="sent">eGovFrame 기반 사내 그룹웨어 포털(6개 모듈, 61개 API)을 혼자 설계부터 구현까지 진행했고,<br> 학생 성적관리 시스템에서는 MyBatis 없이 JDBC로 데이터 계층을 직접 작성했습니다.</span>
+                <span class="sent">외국인·기관 매매동향을 매일 자동 수집·적재하는 주식 ETL 파이프라인을 만들며 데이터 정합성 문제를 해결했습니다.</span>
+                <span class="sent">기업마당 지원사업 공고를 근거로 출처를 인용해 답하는 RAG 챗봇을 로컬 LLM으로 구축했고,<br> 직접 만든 평가셋으로 검색·답변 품질을 측정하며 개선했습니다.</span>
+                <span class="sent">프로젝트에서 MyBatis, Oracle, JSP, FastAPI, OpenSearch, Docker, Linux, Git을 직접 사용했습니다.</span>
+            </p>
 
             <div class="quick-facts">
                 <div class="fact-item">
